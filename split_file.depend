@@ -1,0 +1,25 @@
+# depslib dependency file v1.0
+1740404579 source:e:\sdl2-devel-2.28.5-mingw\ltnc\main.cpp
+	<iostream>
+	<SDL.h>
+	<SDL_image.h>
+
+1740404579 source:e:\sdl2-devel-2.28.5-mingw\split_file\main.cpp
+	<iostream>
+	<SDL.h>
+	<SDL_image.h>
+
+1740789566 source:e:\sdl2-devel-2.28.5-mingw\sdl_image_split_file\main.cpp
+	<iostream>
+	<SDL.h>
+	<SDL_image.h>
+	"defs.h"
+	"graphics.h"
+
+1740787889 e:\sdl2-devel-2.28.5-mingw\sdl_image_split_file\defs.h
+
+1740789711 e:\sdl2-devel-2.28.5-mingw\sdl_image_split_file\graphics.h
+	<SDL.h>
+	<SDL_image.h>
+	"defs.h"
+

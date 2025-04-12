@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1740457025 source:e:\sdl2-devel-2.28.5-mingw\ltnc\guess_it\main.cpp
+	<iostream>
+	<cstdlib>
+
