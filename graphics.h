@@ -10,9 +10,6 @@ struct Graphics {
     SDL_Renderer *renderer;
     SDL_Window *window;
 
-    // các hàm khác
-
-
     void logErrorAndExit(const char* msg, const char* error)
     {
         SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_ERROR,
@@ -92,4 +89,4 @@ struct Graphics {
 
 };
 
-#endif // _GRAPHICS__H
+#endif

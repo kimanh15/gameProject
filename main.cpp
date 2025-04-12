@@ -40,10 +40,12 @@ int main(int argc, char* argv[])
     graphics.presentScene();
     waitUntilKeyPressed();
 
+
     SDL_DestroyTexture( spongeBob );
     spongeBob = NULL;
     SDL_DestroyTexture( background );
     background = NULL;
+
 
     graphics.quit();
     return 0;
