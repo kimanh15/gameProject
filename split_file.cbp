@@ -2,7 +2,7 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="sdl_image_split_file" />
+		<Option title="gameProject " />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
@@ -34,6 +34,7 @@
 		</Compiler>
 		<Unit filename="defs.h" />
 		<Unit filename="graphics.h" />
+		<Unit filename="logic.h" />
 		<Unit filename="main.cpp" />
 		<Extensions />
 	</Project>

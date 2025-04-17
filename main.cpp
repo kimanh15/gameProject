@@ -4,11 +4,9 @@
 #include <SDL_image.h>
 #include "defs.h"
 #include "graphics.h"
+#include "logic.h"
 
 using namespace std;
-
-
-
 
 void waitUntilKeyPressed()
 {
@@ -21,31 +19,58 @@ void waitUntilKeyPressed()
     }
 }
 
-
-
 int main(int argc, char* argv[])
 {
-     Graphics graphics;
+    Graphics graphics;
     graphics.init();
 
-    SDL_Texture* background = graphics.loadTexture("bikiniBottom.jpg");
-    graphics.prepareScene(background);
+    Mouse mouse;
+    mouse.x = SCREEN_WIDTH / 2;
+    mouse.y = SCREEN_HEIGHT / 2;
 
-    graphics.presentScene();
-    waitUntilKeyPressed();
+    ScrollingBackground background;
+    background.setTexture(graphics.loadTexture(BACKGROUND_IMG));
 
-    SDL_Texture* spongeBob = graphics.loadTexture("Spongebob.png");
-    graphics.renderTexture(spongeBob, 200, 200);
+    Sprite bird;
+    SDL_Texture* birdTexture = graphics.loadTexture(BIRD_SPRITE_FILE);
+    bird.init(birdTexture, BIRD_FRAMES, BIRD_CLIPS);
 
-    graphics.presentScene();
-    waitUntilKeyPressed();
+    int birdTickCounter = 0;
 
+    bool quit = false;
+    SDL_Event event;
+     while (!quit) {
 
-    SDL_DestroyTexture( spongeBob );
-    spongeBob = NULL;
-    SDL_DestroyTexture( background );
-    background = NULL;
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_QUIT) quit = true;
+        }
+        const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
+        if (currentKeyStates[SDL_SCANCODE_UP]) mouse.turnNorth();
+        if (currentKeyStates[SDL_SCANCODE_DOWN]) mouse.turnSouth();
+        if (currentKeyStates[SDL_SCANCODE_LEFT]) mouse.turnWest();
+        if (currentKeyStates[SDL_SCANCODE_RIGHT]) mouse.turnEast();
 
+        mouse.move();
+        background.scroll(1);
+
+        birdTickCounter += 10;
+        if (birdTickCounter >= birdTickDelay) {
+            bird.tick();
+            birdTickCounter = 0;
+        }
+
+        graphics.prepareScene();
+        graphics.render(background);
+        render(mouse, graphics);
+
+        graphics.render(150, 100, bird);
+
+        graphics.presentScene();
+
+        SDL_Delay(10);
+    }
+    SDL_DestroyTexture(background.texture); background.texture = nullptr;
+    SDL_DestroyTexture(birdTexture); birdTexture = nullptr;
 
     graphics.quit();
     return 0;
