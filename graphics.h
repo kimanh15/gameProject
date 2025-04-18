@@ -21,7 +21,6 @@ struct ScrollingBackground {
     void scroll(int distance)
     {
         scrollingOffset -= distance;
-
         if (scrollingOffset <= -width) {
         scrollingOffset += width;
         }

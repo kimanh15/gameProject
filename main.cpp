@@ -31,16 +31,21 @@ int main(int argc, char* argv[])
     ScrollingBackground background;
     background.setTexture(graphics.loadTexture(BACKGROUND_IMG));
 
-    Sprite bird;
-    SDL_Texture* birdTexture = graphics.loadTexture(BIRD_SPRITE_FILE);
-    bird.init(birdTexture, BIRD_FRAMES, BIRD_CLIPS);
+    Sprite redBird;
+    SDL_Texture* redBirdTexture = graphics.loadTexture(RED_BIRD_SPRITE_FILE);
+    redBird.init(redBirdTexture, RED_BIRD_FRAMES, RED_BIRD_CLIPS);
 
     Sprite greenBird;
     SDL_Texture* greenBirdTexture = graphics.loadTexture(GREEN_BIRD_SPRITE_FILE);
     greenBird.init(greenBirdTexture, GREEN_BIRD_FRAMES, GREEN_BIRD_CLIPS);
 
-    int birdTickCounter = 0;
+    Sprite rabbit;
+    SDL_Texture* rabbitTexture = graphics.loadTexture(RABBIT_SPRITE_FILE);
+    rabbit.init(rabbitTexture, RABBIT_FRAMES, RABBIT_CLIPS);
+
+    int redBirdTickCounter = 0;
     int greenBirdTickCounter = 0;
+    int rabbitTickCounter = 0;
 
     bool quit = false;
     SDL_Event event;
@@ -58,10 +63,10 @@ int main(int argc, char* argv[])
         mouse.move();
         background.scroll(1);
 
-        birdTickCounter += 10;
-        if (birdTickCounter >= birdTickDelay) {
-            bird.tick();
-            birdTickCounter = 0;
+        redBirdTickCounter += 10;
+        if (redBirdTickCounter >= redBirdTickDelay) {
+            redBird.tick();
+            redBirdTickCounter = 0;
         }
 
         greenBirdTickCounter += 10;
@@ -70,22 +75,30 @@ int main(int argc, char* argv[])
             greenBirdTickCounter = 0;
         }
 
+        rabbitTickCounter += 10;
+        if (rabbitTickCounter >= rabbitTickDelay) {
+            rabbit.tick();
+            rabbitTickCounter = 0;
+        }
+
         graphics.prepareScene();
         graphics.render(background);
         render(mouse, graphics);
 
-        graphics.render(150, 100, bird);
+        graphics.render(150, 100, redBird);
         graphics.render(550, 150, greenBird);
+        graphics.render(200, 370, rabbit);
 
 
         graphics.presentScene();
 
         SDL_Delay(10);
     }
-    SDL_DestroyTexture(background.texture); background.texture = nullptr;
-    SDL_DestroyTexture(birdTexture); birdTexture = nullptr;
-    SDL_DestroyTexture(greenBirdTexture); greenBirdTexture = nullptr;
 
+    SDL_DestroyTexture(background.texture); background.texture = nullptr;
+    SDL_DestroyTexture(redBirdTexture); redBirdTexture = nullptr;
+    SDL_DestroyTexture(greenBirdTexture); greenBirdTexture = nullptr;
+    SDL_DestroyTexture(rabbitTexture); rabbitTexture = nullptr;
 
     graphics.quit();
     return 0;
