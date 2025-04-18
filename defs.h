@@ -7,6 +7,7 @@ const int SCREEN_HEIGHT = 600;
 const char* WINDOW_TITLE = "Hello World!";
 const char* BACKGROUND_IMG = "forest.jpg";
 const int birdTickDelay = 100;
+const int greenBirdTickDelay = 100;
 
 const char*  BIRD_SPRITE_FILE = "83127-sprite-area-line-animated-bird-film.png";
 const int BIRD_CLIPS[][4] = {
@@ -28,6 +29,19 @@ const int BIRD_CLIPS[][4] = {
     {547, 340, 182, 168},
 };
 const int BIRD_FRAMES = sizeof(BIRD_CLIPS)/sizeof(int)/4;
+
+const char* GREEN_BIRD_SPRITE_FILE = "greenbird.png";
+const int GREEN_BIRD_CLIPS[][4] = {
+    {0, 0, 200, 170},
+    {200, 0, 200, 170},
+    {400, 0, 200, 170},
+    {0, 170, 300, 170},
+    {300, 170, 300, 170},
+    {0,	340, 200, 170},
+    {200, 340, 200, 170},
+    {400, 340, 200, 170},
+};
+const int GREEN_BIRD_FRAMES = sizeof(GREEN_BIRD_CLIPS)/sizeof(int)/4;
 
 
 #endif

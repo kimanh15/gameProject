@@ -35,7 +35,12 @@ int main(int argc, char* argv[])
     SDL_Texture* birdTexture = graphics.loadTexture(BIRD_SPRITE_FILE);
     bird.init(birdTexture, BIRD_FRAMES, BIRD_CLIPS);
 
+    Sprite greenBird;
+    SDL_Texture* greenBirdTexture = graphics.loadTexture(GREEN_BIRD_SPRITE_FILE);
+    greenBird.init(greenBirdTexture, GREEN_BIRD_FRAMES, GREEN_BIRD_CLIPS);
+
     int birdTickCounter = 0;
+    int greenBirdTickCounter = 0;
 
     bool quit = false;
     SDL_Event event;
@@ -59,11 +64,19 @@ int main(int argc, char* argv[])
             birdTickCounter = 0;
         }
 
+        greenBirdTickCounter += 10;
+        if (greenBirdTickCounter >= greenBirdTickDelay) {
+            greenBird.tick();
+            greenBirdTickCounter = 0;
+        }
+
         graphics.prepareScene();
         graphics.render(background);
         render(mouse, graphics);
 
         graphics.render(150, 100, bird);
+        graphics.render(550, 150, greenBird);
+
 
         graphics.presentScene();
 
@@ -71,6 +84,8 @@ int main(int argc, char* argv[])
     }
     SDL_DestroyTexture(background.texture); background.texture = nullptr;
     SDL_DestroyTexture(birdTexture); birdTexture = nullptr;
+    SDL_DestroyTexture(greenBirdTexture); greenBirdTexture = nullptr;
+
 
     graphics.quit();
     return 0;
