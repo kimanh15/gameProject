@@ -1,4 +1,3 @@
-
 #ifndef _GRAPHICS__H
 #define _GRAPHICS__H
 
@@ -162,7 +161,5 @@ struct Graphics {
         SDL_Rect renderQuad = {x, y, clip->w, clip->h};
         SDL_RenderCopy(renderer, sprite.texture, clip, &renderQuad);
     }
-
-
 };
 #endif

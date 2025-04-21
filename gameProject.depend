@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1744985076 source:e:\sdl2-devel-2.28.5-mingw\gameproject\main.cpp
+1745232837 source:e:\sdl2-devel-2.28.5-mingw\gameproject\main.cpp
 	<iostream>
 	<SDL.h>
 	<SDL_image.h>
@@ -7,13 +7,14 @@
 	"graphics.h"
 	"logic.h"
 
-1744985063 e:\sdl2-devel-2.28.5-mingw\gameproject\defs.h
+1745241346 e:\sdl2-devel-2.28.5-mingw\gameproject\defs.h
 
-1744985063 e:\sdl2-devel-2.28.5-mingw\gameproject\graphics.h
+1745163899 e:\sdl2-devel-2.28.5-mingw\gameproject\graphics.h
 	<SDL.h>
 	<SDL_image.h>
 	<vector>
 	"defs.h"
 
-1744904549 e:\sdl2-devel-2.28.5-mingw\gameproject\logic.h
+1745217102 e:\sdl2-devel-2.28.5-mingw\gameproject\logic.h
+	<SDL.h>
 
