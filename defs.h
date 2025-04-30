@@ -1,12 +1,22 @@
 #ifndef _DEFS__H
 #define _DEFS__H
+#include <SDL.h>
 
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
 const char* WINDOW_TITLE = "Hello World!";
 const char* BACKGROUND_IMG = "background.jpg";
+const char* ROCK_IMG = "rock.png";
+const char* MUSHROOM_IMG = "mushroom.png";
+const char* GRASS_IMG = "grass.png";
+const char* NOTIFICATION_BOARD_IMG = "notificationBoard.png";
+
+
 const int redBirdTickDelay = 100;
 const int rabbitTickDelay = 90;
+const int OBSTACLE_SPAWN_INTERVAL = 4000;
+const int OBSTACLE_SPEED = 3;
+
 
 const char*  RED_BIRD_SPRITE_FILE = "redbird.png";
 const int RED_BIRD_CLIPS[][4] = {
@@ -39,5 +49,13 @@ const int RABBIT_CLIPS[][4] = {
     {400, 180, 200, 180},
 };
 const int RABBIT_FRAMES = sizeof(RABBIT_CLIPS)/sizeof(int)/4;
+
+struct Obstacle {
+    SDL_Texture* texture;
+    int x, y;
+    int width, height;
+    int radius;
+    std::string type;
+};
 
 #endif
