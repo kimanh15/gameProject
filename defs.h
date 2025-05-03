@@ -1,5 +1,5 @@
-#ifndef _DEFS__H
-#define _DEFS__H
+#ifndef _DEFS_H
+#define _DEFS_H
 #include <SDL.h>
 
 const int SCREEN_WIDTH = 800;

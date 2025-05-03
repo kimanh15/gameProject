@@ -1,5 +1,5 @@
 #ifndef _LOGIC_H
-#define _LOGIC  _H
+#define _LOGIC_H
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <vector>

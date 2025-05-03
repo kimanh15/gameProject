@@ -1,4 +1,3 @@
-
 #ifndef AUDIO_H
 #define AUDIO_H
 
@@ -9,11 +8,15 @@ struct Audio {
     Mix_Music* backgroundMusic = nullptr;
     Mix_Chunk* winSound = nullptr;
     Mix_Chunk* loseSound = nullptr;
+    bool audioInitialized = false;
+
 
     void loadAudio() {
         if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
             SDL_Log("SDL_mixer could not initialize! SDL_mixer Error: %s", Mix_GetError());
+            return;
         }
+        audioInitialized = true;
 
         backgroundMusic = Mix_LoadMUS(BGM_PATH);
         if (!backgroundMusic) {
@@ -50,6 +53,8 @@ struct Audio {
     }
 
     void cleanUp() {
+        if (!audioInitialized) return;
+
         if (backgroundMusic) {
             Mix_FreeMusic(backgroundMusic);
             backgroundMusic = nullptr;
@@ -63,6 +68,11 @@ struct Audio {
             loseSound = nullptr;
         }
         Mix_CloseAudio();
+        audioInitialized = false;
+    }
+    bool isLoaded() const
+    {
+        return backgroundMusic && winSound && loseSound;
     }
 };
 

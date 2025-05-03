@@ -1,5 +1,5 @@
-#ifndef _GRAPHICS__H
-#define _GRAPHICS__H
+#ifndef _GRAPHICS_H
+#define _GRAPHICS_H
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -140,20 +140,20 @@ struct Graphics {
 
 
     void blitRect(SDL_Texture *texture, SDL_Rect *src, int x, int y)
-{
-    SDL_Rect dest;
-    dest.x = x;
-    dest.y = y;
+    {
+        SDL_Rect dest;
+        dest.x = x;
+        dest.y = y;
 
-    if (src) {
-        dest.w = src->w;
-        dest.h = src->h;
-    } else {
-        SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
+        if (src) {
+            dest.w = src->w;
+            dest.h = src->h;
+        } else {
+            SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
+        }
+
+        SDL_RenderCopy(renderer, texture, src, &dest);
     }
-
-    SDL_RenderCopy(renderer, texture, src, &dest);
-}
 
     void presentScene()
     {
