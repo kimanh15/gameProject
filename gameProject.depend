@@ -1,25 +1,27 @@
 # depslib dependency file v1.0
-1746030745 source:e:\sdl2-devel-2.28.5-mingw\gameproject\main.cpp
+1746263977 source:e:\sdl2-devel-2.28.5-mingw\gameproject\main.cpp
 	<iostream>
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_ttf.h>
+	<SDL_mixer.h>
 	<vector>
 	"defs.h"
 	"graphics.h"
 	"logic.h"
+	"audio.h"
 
-1746031346 e:\sdl2-devel-2.28.5-mingw\gameproject\defs.h
+1746263977 e:\sdl2-devel-2.28.5-mingw\gameproject\defs.h
 	<SDL.h>
 
-1746030745 e:\sdl2-devel-2.28.5-mingw\gameproject\graphics.h
+1746240942 e:\sdl2-devel-2.28.5-mingw\gameproject\graphics.h
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_ttf.h>
 	<vector>
 	"defs.h"
 
-1746032059 e:\sdl2-devel-2.28.5-mingw\gameproject\logic.h
+1746264117 e:\sdl2-devel-2.28.5-mingw\gameproject\logic.h
 	<SDL.h>
 	<SDL_ttf.h>
 	<vector>
@@ -27,4 +29,8 @@
 	<cstdlib>
 	"defs.h"
 	"graphics.h"
+
+1746263977 e:\sdl2-devel-2.28.5-mingw\gameproject\audio.h
+	<SDL_mixer.h>
+	"defs.h"
 

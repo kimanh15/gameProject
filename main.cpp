@@ -2,11 +2,13 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
+#include <SDL_mixer.h>
 #include <vector>
 
 #include "defs.h"
 #include "graphics.h"
 #include "logic.h"
+#include "audio.h"
 
 using namespace std;
 
@@ -27,6 +29,10 @@ int main(int argc, char* argv[])
 {
     Graphics graphics;
     graphics.init();
+
+    Audio audio;
+    audio.loadAudio();
+    audio.playBackgroundMusic();
 
     ScrollingBackground background;
     background.setTexture(graphics.loadTexture(BACKGROUND_IMG));
@@ -51,57 +57,65 @@ int main(int argc, char* argv[])
 
     bool quit = false;
     bool isGameOverState = false;
+    bool isGameWinState = false;
+    bool hasPlayedEndSound = false;
     SDL_Event event;
+
      while (!quit) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) quit = true;
-        }
-        const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
-
-        if (!isGameOverState) {
-        handleInput(currentKeyStates);
-        updateRabbit();
-        obstacleManager.update();
-        background.scroll(3);
-
-        redBirdTickCounter += 10;
-        if (redBirdTickCounter >= redBirdTickDelay) {
-            redBird.tick();
-            redBirdTickCounter = 0;
-        }
-
-        rabbitTickCounter += 10;
-        if (rabbitTickCounter >= rabbitTickDelay) {
-            rabbit.tick();
-            rabbitTickCounter = 0;
-        }
-        if (isGameOver()) {
-                isGameOverState = true;
             }
-        } else {
-             if (currentKeyStates[SDL_SCANCODE_R]) {
-                SDL_Log("R key pressed - resetting game...");
-                resetGame();
-                obstacleManager.reset();
-                background.setX(0);
-                redBird.reset();
-                rabbit.reset();
-                isGameOverState = false;
 
-                SDL_Delay(200);
+            const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
+
+            if (!isGameOverState && !isGameWinState) {
+                handleInput(currentKeyStates);
+                updateRabbit();
+                obstacleManager.update();
+                background.scroll(3);
+
+                redBirdTickCounter += 10;
+                if (redBirdTickCounter >= redBirdTickDelay) {
+                    redBird.tick();
+                    redBirdTickCounter = 0;
+                }
+
+                rabbitTickCounter += 10;
+                if (rabbitTickCounter >= rabbitTickDelay) {
+                    rabbit.tick();
+                    rabbitTickCounter = 0;
+                }
+                if (isGameOver()) {
+                    isGameOverState = true;
+                }
+                if (isGameWin()) {
+                    isGameWinState = true;
+                }
             }
-        }
-        graphics.prepareScene();
-        graphics.render(background);
-        graphics.render(110, 50, redBird);
-        graphics.render(200, getRabbitY(), rabbit);
-        obstacleManager.render(graphics);
+            if (!hasPlayedEndSound) {
+                if (isGameOverState) {
+                    audio.playLoseSound();
+                    hasPlayedEndSound = true;
+                }
+                if (isGameWinState) {
+                    audio.playWinSound();
+                    hasPlayedEndSound = true;
+                }
+            }
+            graphics.prepareScene();
+            graphics.render(background);
+            graphics.render(110, 50, redBird);
+            graphics.render(200, getRabbitY(), rabbit);
+            obstacleManager.render(graphics);
 
-        if (isGameOverState) {
-            graphics.renderGameOver(notificationBoard);
-        }
-        graphics.presentScene();
-        SDL_Delay(16);
+            if (isGameOverState) {
+                graphics.renderGameOver(notificationBoard);
+            }
+            if (isGameWinState) {
+                graphics.renderGameWin(notificationBoard);
+            }
+            graphics.presentScene();
+            SDL_Delay(16);
     }
 
     SDL_DestroyTexture(background.texture); background.texture = nullptr;
@@ -110,6 +124,7 @@ int main(int argc, char* argv[])
     SDL_DestroyTexture(notificationBoard); notificationBoard = nullptr;
 
     obstacleManager.cleanUp();
+    audio.cleanUp();
     graphics.quit();
     return 0;
 }

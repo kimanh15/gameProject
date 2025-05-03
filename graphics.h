@@ -99,7 +99,7 @@ struct Graphics {
         if (TTF_Init() == -1) {
         logErrorAndExit("TTF_Init", TTF_GetError());
         }
-        font = TTF_OpenFont("arial.ttf", 24); //
+        font = TTF_OpenFont("arial.ttf", 22);
         if (!font) {
             logErrorAndExit("Failed to load font", TTF_GetError());
         }
@@ -219,7 +219,20 @@ struct Graphics {
         int textMaxWidth = boardWidth - 40;
         int textX = boardX + boardWidth / 2;
         int textY = boardY + boardHeight / 2;
-        renderText("You Lost! Press R to Retry", textX, textY, textMaxWidth);
+        renderText("You Lost!", textX, textY, textMaxWidth);
+    }
+    void renderGameWin(SDL_Texture* notificationBoard)
+    {
+        int boardWidth = 400;
+        int boardHeight = 200;
+        int boardX = (SCREEN_WIDTH - boardWidth) / 2;
+        int boardY = (SCREEN_HEIGHT - boardHeight) / 2;
+        SDL_Rect dest = { boardX, boardY, boardWidth, boardHeight };
+        SDL_RenderCopy(renderer, notificationBoard, NULL, &dest);
+        int textMaxWidth = boardWidth - 40;
+        int textX = boardX + boardWidth / 2;
+        int textY = boardY + boardHeight / 2;
+        renderText("Congratulations! You win!", textX, textY, textMaxWidth);
     }
 
     void renderText(const std::string& message, int x, int y, int maxWidth)

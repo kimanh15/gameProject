@@ -1,5 +1,5 @@
-#ifndef _LOGIC__H
-#define _LOGIC__H
+#ifndef _LOGIC_H
+#define _LOGIC  _H
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <vector>
@@ -16,13 +16,27 @@ const float gravityUp = 0.20f;
 const float gravityDown = 0.025f;
 const float maxJumpHeight = 240.0f;
 
+const int rabbitX = 245;
+const int rabbitColliderOffsetY = 45;
+const int rabbitColliderW = 130;
+const int rabbitColliderH = 80;
+const int carrotWidth = 100;
+const int carrotHeight = 100;
+
 bool gameOver = false;
+bool gameWin = false;
 float rabbitY = groundY;
 float velocityY = 0.0f;
 bool isJumping = false;
 
+int obstaclesCleared = 0;
+bool carrotAppeared = false;
+float carrotX = SCREEN_WIDTH;
+SDL_Texture* carrotTexture = nullptr;
+
 float getRabbitY();
 bool isGameOver();
+bool isGameWin();
 void resetGame();
 void initRabbit();
 void handleInput(const Uint8* keys);
@@ -45,14 +59,16 @@ public:
         return obstacles;
     }
 
-    void loadTextures(Graphics& graphics) {
-        rockTexture = graphics.loadTexture(ROCK_IMG);
-        mushroomTexture = graphics.loadTexture(MUSHROOM_IMG);
-        grassTexture = graphics.loadTexture(GRASS_IMG);
+    void loadTextures(Graphics& graphics)
+        {
+        if (!rockTexture) rockTexture = graphics.loadTexture(ROCK_IMG);
+        if (!mushroomTexture) mushroomTexture = graphics.loadTexture(MUSHROOM_IMG);
+        if (!grassTexture) grassTexture = graphics.loadTexture(GRASS_IMG);
+        if (!carrotTexture) carrotTexture = graphics.loadTexture(CARROT_IMG);
     }
 
     void update() {
-         if (isGameOver()) return;
+        if (isGameOver() || isGameWin()) return;
 
         Uint32 currentTime = SDL_GetTicks();
         if (currentTime - lastSpawnTime >= OBSTACLE_SPAWN_INTERVAL) {
@@ -60,44 +76,68 @@ public:
             lastSpawnTime = currentTime;
         }
 
-        for (auto& obstacle : obstacles) {
-            obstacle.x -= OBSTACLE_SPEED;
-        }
+        for (auto& obs : obstacles) {
+            obs.x -= OBSTACLE_SPEED;
 
-        obstacles.erase(
-            std::remove_if(obstacles.begin(), obstacles.end(),
-                [](const Obstacle& obs) { return obs.x + obs.width < 0; }),
-            obstacles.end()
-        );
-        SDL_Rect rabbitRect = getRabbitCollider(rabbitY);
-        for (const auto& obs : obstacles) {
-            SDL_Rect obsRect = getObstacleCollider(obs);
+            if (!obs.passed && obs.x + obs.width < 100) {
+                obs.passed = true;
+                obstaclesCleared++;
 
-            if (checkCollisionByType(rabbitRect, obs)) {
-                gameOver = true;
-                break;
+                if (obstaclesCleared >= 30 && !carrotAppeared) {
+                    carrotAppeared = true;
+                    carrotX = SCREEN_WIDTH;
+                }
             }
         }
+
+        obstacles.erase(std::remove_if(obstacles.begin(), obstacles.end(),[](const Obstacle& obs) { return obs.x + obs.width < 0; }), obstacles.end());
+
+        SDL_Rect rabbitRect = getRabbitCollider(rabbitY);
+        for (const auto& obs : obstacles) {
+            if (checkCollisionByType(rabbitRect, obs)) {
+                gameOver = true;
+                return;
+            }
+        }
+        if (carrotAppeared) {
+           SDL_Rect carrotRect = { static_cast<int>(carrotX + 230), static_cast<int>(groundY + 50), carrotWidth, carrotHeight };
+            if (checkCollision(rabbitRect, carrotRect)) {
+                gameWin = true;
+            }
+            carrotX -= OBSTACLE_SPEED;
+        }
     }
+
     void render(Graphics& graphics) {
         for (auto& obstacle : obstacles) {
             graphics.render(obstacle.x, obstacle.y, obstacle.texture, obstacle.width, obstacle.height);
         }
+         if (carrotAppeared) {
+            graphics.render(carrotX + 230, groundY + 50, carrotTexture, carrotWidth, carrotHeight);
+        }
     }
 
-    void reset() {
+    void reset()
+    {
         obstacles.clear();
         lastSpawnTime = SDL_GetTicks() + 1000;
+        obstaclesCleared = 0;
+        carrotAppeared = false;
+        gameWin = false;
+        carrotX = SCREEN_WIDTH;
     }
 
-    void cleanUp() {
+    void cleanUp()
+    {
         SDL_DestroyTexture(rockTexture); rockTexture = nullptr;
         SDL_DestroyTexture(mushroomTexture); mushroomTexture = nullptr;
         SDL_DestroyTexture(grassTexture); grassTexture = nullptr;
+        SDL_DestroyTexture(carrotTexture); carrotTexture = nullptr;
     }
 
 private:
-    void spawnObstacle() {
+    void spawnObstacle()
+    {
         int type = rand() % 3;
         Obstacle newObstacle;
         newObstacle.x = SCREEN_WIDTH;
@@ -125,30 +165,33 @@ private:
             newObstacle.radius = 70;
             newObstacle.type = "grass";
             break;
+        }
+        obstacles.push_back(newObstacle);
     }
-
-    obstacles.push_back(newObstacle);
-}
 };
+
 ObstacleManager obstacleManager;
 
-void initRabbit() {
+void initRabbit()
+{
     rabbitY = groundY;
     velocityY = 0;
     isJumping = false;
 }
 
-void handleInput(const Uint8* keys) {
-     if (isGameOver()) return;
+void handleInput(const Uint8* keys)
+{
+    if ((isGameOver() || isGameWin()) || isJumping) return;
 
-    if (keys[SDL_SCANCODE_SPACE] && !isJumping) {
+    if (keys[SDL_SCANCODE_SPACE]) {
         velocityY = jumpStrength;
         isJumping = true;
     }
 }
 
-void updateRabbit() {
-    if (isGameOver()) return;
+void updateRabbit()
+{
+    if (isGameOver() || isGameWin()) return;
 
     velocityY += (velocityY < 0) ? gravityUp : gravityDown;
     rabbitY += velocityY;
@@ -165,11 +208,8 @@ void updateRabbit() {
     }
 }
 
-float getRabbitY() {
-    return rabbitY;
-}
-
-bool checkCollision(const SDL_Rect& a, const SDL_Rect& b) {
+bool checkCollision(const SDL_Rect& a, const SDL_Rect& b)
+{
     return (a.x < b.x + b.w &&
             a.x + a.w > b.x &&
             a.y < b.y + b.h &&
@@ -177,63 +217,54 @@ bool checkCollision(const SDL_Rect& a, const SDL_Rect& b) {
 }
 
 bool checkCollisionByType(const SDL_Rect& rabbitRect, const Obstacle& obs) {
-   if (obs.type == "mushroom") {
-    SDL_Rect obsRect = getObstacleCollider(obs);
-    return checkCollision(rabbitRect, obsRect);
+    if (obs.type == "mushroom") {
+        SDL_Rect obsRect = getObstacleCollider(obs);
+        return checkCollision(rabbitRect, obsRect);
     }
-     else if (obs.type == "rock" || obs.type == "grass") {
-     if (obs.radius > 0) {
-            int rabbitCenterX = rabbitRect.x + rabbitRect.w / 2;
-            int rabbitCenterY = rabbitRect.y + rabbitRect.h / 2;
-            int rabbitRadius = std::min(rabbitRect.w, rabbitRect.h) / 2;
+      if (obs.radius > 0) {
+        int rabbitCenterX = rabbitRect.x + rabbitRect.w / 2;
+        int rabbitCenterY = rabbitRect.y + rabbitRect.h / 2;
+        int rabbitRadius = std::min(rabbitRect.w, rabbitRect.h) / 2;
 
-            int obsCenterX = obs.x + obs.radius;
-            int obsCenterY = obs.y + obs.radius;
+        int obsCenterX = obs.x + obs.radius;
+        int obsCenterY = obs.y + obs.radius;
 
-            int obsRadius;
-            if (obs.type == "rock") {
-                obsRadius = 65;
-            } else if (obs.type == "grass") {
-                obsRadius = 70;
-            } else {
-                obsRadius = obs.radius;
-            }
-            int dx = rabbitCenterX - obsCenterX;
-            int dy = rabbitCenterY - obsCenterY;
-            int distSq = dx * dx + dy * dy;
-            int radiusSum = rabbitRadius + obsRadius;
+        int dx = rabbitCenterX - obsCenterX;
+        int dy = rabbitCenterY - obsCenterY;
+        int distSq = dx * dx + dy * dy;
+        int radiusSum = rabbitRadius + obs.radius;
 
-            return distSq <= radiusSum * radiusSum;
-        }
+        return distSq <= radiusSum * radiusSum;
     }
-
     return false;
 }
 
-SDL_Rect getRabbitCollider(float rabbitY) {
-     return {
-        245,
-        static_cast<int>(rabbitY) + 45,
-        130,
-        80
+SDL_Rect getRabbitCollider(float rabbitY)
+{
+    return {
+        rabbitX,
+        static_cast<int>(rabbitY) + rabbitColliderOffsetY,
+        rabbitColliderW,
+        rabbitColliderH
     };
 }
 
-SDL_Rect getObstacleCollider(const Obstacle& obs) {
-        if (obs.radius > 0) {
+SDL_Rect getObstacleCollider(const Obstacle& obs)
+{
+    if (obs.radius > 0) {
         return { obs.x + obs.radius, obs.y + obs.radius, obs.radius * 2, obs.radius * 2 };
     }
     return { obs.x + 15, obs.y + 10, obs.width - 30, obs.height - 20 };
 }
 
-
-bool isGameOver() {
-    return gameOver;
-}
+float getRabbitY() { return rabbitY; }
+bool isGameOver() { return gameOver; }
+bool isGameWin() { return gameWin; }
 
 void resetGame() {
     initRabbit();
     gameOver = false;
+    gameWin = false;
     velocityY = 0;
     isJumping = false;
     obstacleManager.reset();

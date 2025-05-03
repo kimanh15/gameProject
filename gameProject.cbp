@@ -2,7 +2,7 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="gameProject " />
+		<Option title="gameProject" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
@@ -32,6 +32,7 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="audio.h" />
 		<Unit filename="defs.h" />
 		<Unit filename="graphics.h" />
 		<Unit filename="logic.h" />

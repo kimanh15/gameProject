@@ -5,12 +5,17 @@
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
 const char* WINDOW_TITLE = "Hello World!";
+
 const char* BACKGROUND_IMG = "background.jpg";
 const char* ROCK_IMG = "rock.png";
 const char* MUSHROOM_IMG = "mushroom.png";
 const char* GRASS_IMG = "grass.png";
+const char* CARROT_IMG = "carrot.png";
 const char* NOTIFICATION_BOARD_IMG = "notificationBoard.png";
 
+const char* BGM_PATH = "backgroundMusic.mp3";
+const char* WIN_SOUND_PATH = "gameWinSound.wav";
+const char* LOSE_SOUND_PATH = "gameLoseSound.wav";
 
 const int redBirdTickDelay = 100;
 const int rabbitTickDelay = 90;
@@ -56,6 +61,7 @@ struct Obstacle {
     int width, height;
     int radius;
     std::string type;
+    bool passed = false;
 };
 
 #endif
