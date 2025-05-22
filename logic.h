@@ -10,11 +10,11 @@
 
 
 const float gravity = 0.30f;
-const float jumpStrength = -10.0;
+const float jumpStrength = -13.0;
 const float groundY = 380.0f;
-const float gravityUp = 0.20f;
-const float gravityDown = 0.025f;
-const float maxJumpHeight = 240.0f;
+const float gravityUp = 0.30f;
+const float gravityDown = 0.30f;
+const float maxJumpHeight = 0.0f;
 
 const int rabbitX = 245;
 const int rabbitColliderOffsetY = 45;

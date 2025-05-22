@@ -72,7 +72,7 @@ int main(int argc, char* argv[])
                 handleInput(currentKeyStates);
                 updateRabbit();
                 obstacleManager.update();
-                background.scroll(3);
+                background.scroll(4);
 
                 redBirdTickCounter += 10;
                 if (redBirdTickCounter >= redBirdTickDelay) {

@@ -20,7 +20,7 @@ const char* LOSE_SOUND_PATH = "gameLoseSound.wav";
 const int redBirdTickDelay = 100;
 const int rabbitTickDelay = 90;
 const int OBSTACLE_SPAWN_INTERVAL = 4000;
-const int OBSTACLE_SPEED = 3;
+const int OBSTACLE_SPEED = 4;
 
 
 const char*  RED_BIRD_SPRITE_FILE = "redbird.png";
